@@ -3,4 +3,4 @@
 	url = git@github.com:timhiggins/websocketpp.git
 [submodule "lib/rapidjson"]
 	path = lib/rapidjson
-	url = https://github.com/miloyip/rapidjson.git
+	url = git@github.com:timhiggins/rapidjson.git
