@@ -1,6 +1,3 @@
 [submodule "lib/websocketpp"]
 	path = lib/websocketpp
 	url = git@github.com:timhiggins/websocketpp.git
-[submodule "lib/rapidjson"]
-	path = lib/rapidjson
-	url = git@github.com:timhiggins/rapidjson.git
