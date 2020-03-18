@@ -28,11 +28,20 @@ file(GLOB ALL_HEADERS ${CMAKE_CURRENT_LIST_DIR}/src/*.h )
 set(SIO_INCLUDEDIR ${CMAKE_CURRENT_LIST_DIR})
 
 add_library(sioclient ${ALL_SRC})
-target_include_directories(sioclient PRIVATE ${Boost_INCLUDE_DIRS} 
+
+# Hach - Configure so any target which depends on this library automatically has the appropriate include directories 
+# added to its own, so explicit call to include_directories is not required.
+target_include_directories(sioclient PUBLIC ${Boost_INCLUDE_DIRS} 
     ${CMAKE_CURRENT_LIST_DIR}/src 
     ${CMAKE_CURRENT_LIST_DIR}/lib/websocketpp 
     ${CMAKE_CURRENT_LIST_DIR}/lib/rapidjson/include
 )
+#target_include_directories(sioclient PRIVATE ${Boost_INCLUDE_DIRS} 
+#    ${CMAKE_CURRENT_LIST_DIR}/src 
+#    ${CMAKE_CURRENT_LIST_DIR}/lib/websocketpp 
+#    ${CMAKE_CURRENT_LIST_DIR}/lib/rapidjson/include
+#)
+# Hach
 
 set_property(TARGET sioclient PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -49,12 +58,22 @@ list(APPEND TARGET_LIBRARIES sioclient)
 find_package(OpenSSL)
 if(OPENSSL_FOUND)
 add_library(sioclient_tls ${ALL_SRC})
-target_include_directories(sioclient_tls PRIVATE ${Boost_INCLUDE_DIRS} 
+
+# Hach - Configure so any target which depends on this library automatically has the appropriate include directories 
+# added to its own, so explicit call to include_directories is not required.
+target_include_directories(sioclient_tls PUBLIC ${Boost_INCLUDE_DIRS} 
     ${CMAKE_CURRENT_LIST_DIR}/src 
     ${CMAKE_CURRENT_LIST_DIR}/lib/websocketpp 
     ${CMAKE_CURRENT_LIST_DIR}/lib/rapidjson/include
     ${OPENSSL_INCLUDE_DIR}
 )
+#target_include_directories(sioclient_tls PRIVATE ${Boost_INCLUDE_DIRS} 
+#    ${CMAKE_CURRENT_LIST_DIR}/src 
+#    ${CMAKE_CURRENT_LIST_DIR}/lib/websocketpp 
+#    ${CMAKE_CURRENT_LIST_DIR}/lib/rapidjson/include
+#    ${OPENSSL_INCLUDE_DIR}
+#)
+# Hach
 
 set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD 11)
 set_property(TARGET sioclient_tls PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -82,3 +101,8 @@ install(TARGETS ${TARGET_LIBRARIES}
 install(FILES ${Boost_LIBRARIES} 
     DESTINATION "${CMAKE_CURRENT_LIST_DIR}/build/lib/${CMAKE_BUILD_TYPE}"
 )
+
+# Hach - suppress 'will be initialized after [-Wreorder] warning'
+target_compile_options(sioclient PRIVATE -Wno-reorder)
+target_compile_options(sioclient_tls PRIVATE -Wno-reorder)
+# Hach
